@@ -1,0 +1,1 @@
+web: bundle exec ruby app/rotten.rb -p $PORT
