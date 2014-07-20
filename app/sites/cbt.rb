@@ -6,7 +6,7 @@ class CBT
     response = get('/browse.php', headers: {
       "Cookie" => $redis.hget(:cbt, :cookie)}
     )
-    raise "Session Expired" if response.match('takelogin')
+    raise "Session Expired" if response.match('takelogin.php')
     require 'pry'; binding.pry
   end
 

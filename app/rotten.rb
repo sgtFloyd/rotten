@@ -2,15 +2,12 @@ require 'bundler'
 Bundler.require
 
 load '.env' if File.exists?('.env')
+redistogo = URI.parse ENV['REDISTOGO_URL']
+$redis = Redis.new(:host => redistogo.host,
+                   :port => redistogo.port,
+                   :password => redistogo.password)
 
 class RottenApp < Sinatra::Base
-  configure do
-    redistogo = URI.parse ENV['REDISTOGO_URL']
-    set :redis => Redis.new(:host => redistogo.host,
-                            :port => redistogo.port,
-                            :password => redistogo.password)
-  end
-  $redis = settings.redis
 
   get '/cbt.rss' do
     begin
