@@ -3,21 +3,29 @@ class CBT
   base_uri $redis.hget(:cbt, :base_uri)
 
   ROW_REGEX = /<tr class="(?:even|odd)">.*?<\/tr>/m
+  COL_REGEX = /<td class='.*?'>(.*?)<\/td>/m
+
   def self.sources
-    response = get('/browse.php', headers: {
-      "Cookie" => $redis.hget(:cbt, :cookie)}
-    )
+    # response = get('/browse.php', headers: {
+    #   "Cookie" => $redis.hget(:cbt, :cookie)
+    # })
+    response = File.open('browse.html').read
     raise "Session Expired" if response.match('takelogin.php')
     response.scan(ROW_REGEX).map{|row| Source.from_row(row)}
   end
 
-  class Source
-    attr_accessor :row
+  class Source < OpenStruct
     def self.from_row(row)
-      self.row = row
-    end
-
-    def to_rss
+      cols = row.scan(COL_REGEX)
+      self.new(
+        title: cols[1][0].scan(/>(.*?)</m).join.delete('&nbsp;').strip,
+        link:  [CBT.base_uri,'/',cols[3][0].scan(/<a href='(.*?)'/m)[1]].join,
+        size:  cols[6][0].scan(/>(.*?)</m).join,
+        total: cols[7][0].scan(/>(.*?)</m).join.to_i,
+        up:    cols[8][0].scan(/>(.*?)</m).join.to_i,
+        down:  cols[9][0].scan(/>(.*?)</m).join.to_i,
+        date:  Time.parse(cols[2].join)
+      )
     end
   end
 
