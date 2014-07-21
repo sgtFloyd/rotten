@@ -12,7 +12,8 @@ require_relative 'sites/cbt.rb'
 class RottenApp < Sinatra::Base
 
   get '/cbt.rss' do
-    haml :rss, locals: {sources: CBT.sources}
+    content_type 'text/xml'
+    haml :rss, locals: {sources: CBT.sources}, :escape_html => true
   end
 
   run! if app_file == $0

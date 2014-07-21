@@ -6,10 +6,9 @@ class CBT
   COL_REGEX = /<td class='.*?'>(.*?)<\/td>/m
 
   def self.sources
-    # response = get('/browse.php', headers: {
-    #   "Cookie" => $redis.hget(:cbt, :cookie)
-    # })
-    response = File.open('browse.html').read
+    response = get('/browse.php', headers: {
+      "Cookie" => $redis.hget(:cbt, :cookie)
+    })
     raise "Session Expired" if response.match('takelogin.php')
     response.scan(ROW_REGEX).map{|row| Source.from_row(row)}
   end
