@@ -11,6 +11,11 @@ require_relative 'sites/cbt.rb'
 
 class RottenApp < Sinatra::Base
 
+  before do
+    pass if params[:auth] == ENV['AUTH_KEY']
+    error 401
+  end
+
   get '/cbt.rss' do
     content_type 'text/xml'
     haml :rss, locals: {sources: CBT.sources}, :escape_html => true
