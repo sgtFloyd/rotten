@@ -14,15 +14,17 @@ class CBT
   end
 
   class Source < OpenStruct
+    CONTENT = />(.*?)</m
+
     def self.from_row(row)
       cols = row.scan(COL_REGEX)
       self.new(
-        title: cols[1][0].scan(/>(.*?)</m).join.delete('&nbsp;').strip,
+        title: cols[1][0].scan(CONTENT).join.gsub('&nbsp;', ' ').strip,
         link:  [CBT.base_uri,'/',cols[3][0].scan(/<a href='(.*?)'/m)[1]].join,
-        size:  cols[6][0].scan(/>(.*?)</m).join,
-        total: cols[7][0].scan(/>(.*?)</m).join.to_i,
-        up:    cols[8][0].scan(/>(.*?)</m).join.to_i,
-        down:  cols[9][0].scan(/>(.*?)</m).join.to_i,
+        size:  cols[6][0].scan(CONTENT).join,
+        total: cols[7][0].scan(CONTENT).join.to_i,
+        up:    cols[8][0].scan(CONTENT).join.to_i,
+        down:  cols[9][0].scan(CONTENT).join.to_i,
         date:  Time.parse(cols[2].join)
       )
     end
