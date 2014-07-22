@@ -20,16 +20,18 @@ private
     print 'Password: '; password = gets.strip
 
     # Figure out how to POST to HTTPS with HTTParty...
-    uri = URI.parse(base_uri+"/login.php")
+    uri = URI.parse(base_uri+'/login.php')
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     request = Net::HTTP::Post.new(uri.request_uri)
     request.set_form_data(
-      "username" => username, "password" => password
+      username: username, password: password
     )
     response = http.request(request)
     cookie = response['set-cookie']
+    $redis.hset(:ggn, :cookie, cookie)
+    cookie
   end
 
 end
