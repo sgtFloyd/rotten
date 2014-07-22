@@ -25,8 +25,7 @@ class CBT
         total: cols[7][0].scan(CONTENT).join.to_i,
         up:    cols[8][0].scan(CONTENT).join.to_i,
         down:  cols[9][0].scan(CONTENT).join.to_i,
-        # TODO: Parse relative time correctly. "Yesterday 10:30AM"
-        date:  Time.parse(cols[2].join)
+        date:  Chronic.parse(cols[2].join)
       )
     end
   end

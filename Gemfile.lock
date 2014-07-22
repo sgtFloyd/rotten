@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    chronic (0.10.2)
     coderay (1.1.0)
     haml (4.0.5)
       tilt
@@ -29,6 +30,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  chronic
   haml
   httparty
   pry

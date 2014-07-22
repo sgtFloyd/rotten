@@ -5,6 +5,7 @@ gem 'sinatra'
 gem 'httparty'
 gem 'redis'
 gem 'haml'
+gem 'chronic'
 
 group :development do
   gem 'pry'
