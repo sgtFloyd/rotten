@@ -19,14 +19,13 @@ private
     print 'Username: '; username = gets.strip
     print 'Password: '; password = gets.strip
 
-    # Figure out how to POST to HTTPS with HTTParty...
-    uri = URI.parse(base_uri+'/login.php')
-    options = {use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE}
-    response = Net::HTTP.start(uri.host, uri.port, options) do |http|
-      http.request(Net::HTTP::Post.new(uri.request_uri).tap{|request|
-        request.set_form_data(username: username, password: password)
-      })
-    end
+    # Using :limit => 1 causes an exception in HTTParty if the request
+    # returns a 302. The pre-exception response has the cookie we want.
+    post('/login.php', verify: false, limit: 1, body: {
+      username: username, password: password, keeplogged: 1
+    })
+  rescue HTTParty::RedirectionTooDeep => e
+    response = e.response
     cookie = response['set-cookie'].split(/;|,/).select{|part|
              part.match(/__cfduid|PHPSESSID|session/)}.join(';')
     $redis.hset(:ggn, :cookie, cookie)
