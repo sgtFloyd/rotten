@@ -18,7 +18,7 @@ class RottenApp < Sinatra::Base
 
   get '/cbt.rss' do
     content_type 'text/xml'
-    haml :rss, locals: {sources: CBT.sources}, :escape_html => true
+    haml :rss, locals: {items: CBT.items}, :escape_html => true
   end
 
   run! if app_file == $0

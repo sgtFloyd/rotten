@@ -2,12 +2,12 @@ class GGn
   include HTTParty
   base_uri $redis.hget(:ggn, :base_uri)
 
-  def self.sources
+  def self.items
     # response = get('/browse.php', headers: {
     #   "Cookie" => $redis.hget(:ggn, :cookie)
     # })
     # raise "Session Expired" if response.match('login.php')
-    # response.scan(ROW_REGEX).map{|row| Source.from_row(row)}
+    # response.scan(ROW_REGEX).map{|row| Item.from_row(row)}
   end
 
 private

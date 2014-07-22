@@ -5,15 +5,15 @@ class CBT
   ROW_REGEX = /<tr class="(?:even|odd)">.*?<\/tr>/m
   COL_REGEX = /<td class='.*?'>(.*?)<\/td>/m
 
-  def self.sources
+  def self.items
     response = get('/browse.php', headers: {
       "Cookie" => $redis.hget(:cbt, :cookie)
     })
     raise "Session Expired" if response.match('takelogin.php')
-    response.scan(ROW_REGEX).map{|row| Source.from_row(row)}
+    response.scan(ROW_REGEX).map{|row| Item.from_row(row)}
   end
 
-  class Source < OpenStruct
+  class Item < OpenStruct
     CONTENT = />(.*?)</m
 
     def self.from_row(row)
