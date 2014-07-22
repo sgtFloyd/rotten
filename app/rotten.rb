@@ -8,12 +8,12 @@ $redis = Redis.new(:host => redistogo.host,
                    :password => redistogo.password)
 
 require_relative 'sites/cbt.rb'
+require_relative 'sites/ggn.rb'
 
 class RottenApp < Sinatra::Base
 
   before do
-    pass if params[:auth] == ENV['AUTH_KEY']
-    error 401
+    error 401 unless params[:auth] == ENV['AUTH_KEY']
   end
 
   get '/cbt.rss' do
