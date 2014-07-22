@@ -3,7 +3,7 @@ class GGn
   base_uri $redis.hget(:ggn, :base_uri)
 
   def self.items
-    response = get('/browse.php', verify: false,
+    response = get($redis.hget(:ggn, :browse_path), verify: false,
       headers: {'cookie' => $redis.hget(:ggn, :cookie)}
     )
 

@@ -6,9 +6,9 @@ class CBT
   COL_REGEX = /<td class='.*?'>(.*?)<\/td>/m
 
   def self.items
-    response = get('/browse.php', headers: {
-      "Cookie" => $redis.hget(:cbt, :cookie)
-    })
+    response = get($redis.hget(:cbt, :browse_path),
+      headers: {'Cookie' => $redis.hget(:cbt, :cookie)}
+    )
     raise "Session Expired" if response.match('takelogin.php')
     response.scan(ROW_REGEX).map{|row| Item.from_row(row)}
   end
