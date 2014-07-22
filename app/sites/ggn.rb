@@ -6,9 +6,9 @@ class GGn
     response = get($redis.hget(:ggn, :browse_path), verify: false,
       headers: {'cookie' => $redis.hget(:ggn, :cookie)}
     )
-
-    # raise "Session Expired" if response.match('login.php')
     # response.scan(ROW_REGEX).map{|row| Item.from_row(row)}
+  rescue HTTParty::RedirectionTooDeep => e
+    raise e.response.location.match('login.php') ? 'Session Expired' : e
   end
 
 private
