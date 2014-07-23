@@ -2,11 +2,13 @@ class GGn
   include HTTParty
   base_uri $redis.hget(:ggn, :base_uri)
 
+  ROW_REGEX = /<tr class="group_.*?">\s*<td colspan="3">.*?<\/tr>/m
+
   def self.items
     response = get($redis.hget(:ggn, :browse_path), verify: false,
       headers: {'cookie' => $redis.hget(:ggn, :cookie)}
     )
-    # response.scan(ROW_REGEX).map{|row| Item.from_row(row)}
+    response.scan(ROW_REGEX).map{|row| Item.from_row(row)}
   rescue HTTParty::RedirectionTooDeep => e
     raise e.response.location.match('login.php') ? 'Session Expired' : e
   end
@@ -26,6 +28,7 @@ private
     })
   rescue HTTParty::RedirectionTooDeep => e
     response = e.response
+    raise "Login Failed" if response['location'].match('login')
     cookie = response['set-cookie'].split(/;|,/).select{|part|
              part.match(/__cfduid|PHPSESSID|session/)}.join(';')
     $redis.hset(:ggn, :cookie, cookie)
