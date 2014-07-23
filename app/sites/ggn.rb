@@ -8,8 +8,9 @@ class GGn
     response = get($redis.hget(:ggn, :browse_path), verify: false,
       headers: {'cookie' => $redis.hget(:ggn, :cookie)}
     )
-    response.scan(ROW_REGEX).map{|row| Item.from_row(row)} +
+    (response.scan(ROW_REGEX).map{|row| Item.from_row(row)} +
       response.scan(ALT_ROW_REGEX).map{|row| Item.from_alt_row(row)}
+    ).sort_by(&:date).reverse
   rescue HTTParty::RedirectionTooDeep => e
     raise e.response.location.match('login.php') ? 'Session Expired' : e
   end
@@ -19,18 +20,24 @@ class GGn
 
     def self.from_row(row)
       cols = row.scan(COL_REGEX)
-      self.new(
-        title: cols[2].scan(CONTENT).join.gsub(/\s+/, ' ').strip,
-        link:  [GGn.base_uri,'/',cols[2].scan(/<a.*?href="(.*?)".*?>/m)[0]].join,
-        size:  cols[6].scan(CONTENT).join,
-        total: cols[7].scan(CONTENT).join.to_i,
-        up:    cols[8].scan(CONTENT).join.to_i,
-        down:  cols[9].scan(CONTENT).join.to_i,
-        date:  Time.parse(cols[4].scan(/title="(.*?)"/).join),
-      )
+      self.from_cols(cols[2..-1])
     end
 
     def self.from_alt_row(alt_row)
+      cols = alt_row.scan(COL_REGEX)
+      self.from_cols(cols)
+    end
+
+    def self.from_cols(cols)
+      self.new(
+        title: CGI.unescape_html(cols[0].scan(CONTENT).join.gsub(/\s+/, ' ').strip),
+        link:  CGI.unescape_html([GGn.base_uri,'/',cols[0].scan(/<a.*?href="([^"]*?)".*?>/m)[0]].join),
+        size:  cols[4].scan(CONTENT).join,
+        total: cols[5].scan(CONTENT).join.to_i,
+        up:    cols[6].scan(CONTENT).join.to_i,
+        down:  cols[7].scan(CONTENT).join.to_i,
+        date:  Time.parse(cols[2].scan(/title="([^"]*?)"/).join)
+      )
     end
   end
 
