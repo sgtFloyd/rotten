@@ -2,7 +2,8 @@ class GGn
   include HTTParty
   base_uri $redis.hget(:ggn, :base_uri)
 
-  COL_REGEX = /<td.*?<\/td>/m
+  ROW_REGEX = /#{$redis.hget :ggn, :row_regex}/m
+  ALT_ROW_REGEX = /#{$redis.hget :ggn, :alt_row_regex}/m
 
   def self.items
     response = get($redis.hget(:ggn, :browse_path), verify: false,
@@ -16,6 +17,7 @@ class GGn
   end
 
   class Item < OpenStruct
+    COL_REGEX = /<td.*?<\/td>/m
     CONTENT = />(.*?)</m
 
     def self.from_row(row)

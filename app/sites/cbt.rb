@@ -2,8 +2,7 @@ class CBT
   include HTTParty
   base_uri $redis.hget(:cbt, :base_uri)
 
-  ROW_REGEX = /<tr class="(?:even|odd)">.*?<\/tr>/m
-  COL_REGEX = /<td class='.*?'>(.*?)<\/td>/m
+  ROW_REGEX = /#{$redis.hget :cbt, :row_regex}/m
 
   def self.items
     response = get($redis.hget(:cbt, :browse_path),
@@ -14,6 +13,7 @@ class CBT
   end
 
   class Item < OpenStruct
+    COL_REGEX = /<td class='.*?'>(.*?)<\/td>/m
     CONTENT = />(.*?)</m
 
     def self.from_row(row)
