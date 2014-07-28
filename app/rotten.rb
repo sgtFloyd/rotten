@@ -9,6 +9,7 @@ $redis = Redis.new(:host => redistogo.host,
 
 require_relative 'sites/cbt.rb'
 require_relative 'sites/ggn.rb'
+require_relative 'sites/bib.rb'
 
 class RottenApp < Sinatra::Base
 
