@@ -20,12 +20,12 @@ class BiB
       cols = row.scan(COL_REGEX)
       self.new(
         title: cols[1].scan(/<a.*?>.*?<\/a>/m)[0..1].join(' - ').scan(CONTENT).join,
-        link: cols[2].scan(/<a.*?href="([^"]*?)".*?>/m).join, #TODO: This link requires a cookie
-        size: cols[4].scan(/[^,]*?,(.*?)<br/m).join.strip,
+        link:  cols[2].scan(/<a.*?href="([^"]*?)".*?>/m).join, #TODO: This link requires a cookie
+        size:  cols[4].scan(/[^,]*?,(.*?)<br/m).join.strip,
         total: cols[6].scan(CONTENT).join.strip.to_i,
-        up: cols[7].scan(CONTENT).join.strip.to_i,
-        down: cols[8].scan(CONTENT).join.strip.to_i,
-        date: Time.parse(cols[4].scan(/datetime="([^"]*?)"/m).join)
+        up:    cols[7].scan(CONTENT).join.strip.to_i,
+        down:  cols[8].scan(CONTENT).join.strip.to_i,
+        date:  Time.parse(cols[4].scan(/datetime="([^"]*?)"/m).join)
       )
     end
   end
