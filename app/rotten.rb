@@ -12,6 +12,7 @@ Dir['./app/sites/*.rb'].each &method(:require)
 
 class RottenApp < Sinatra::Base
   before do
+    pass if request.path == '/ping'
     error 401 unless params[:auth] == ENV['AUTH_KEY']
   end
 
@@ -29,5 +30,6 @@ class RottenApp < Sinatra::Base
     BiB.file(params[:id])
   end
 
+  get('/ping'){'PONG'}
   run! if app_file == $0
 end
