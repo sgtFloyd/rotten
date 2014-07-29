@@ -23,5 +23,10 @@ class RottenApp < Sinatra::Base
   get('/ggn.rss'){ rss GGn.items }
   get('/bib.rss'){ rss BiB.items }
 
+  get '/files/bib/:id' do
+    attachment "#{params[:id]}.#{ENV['FORMAT']}"
+    BiB.file(params[:id])
+  end
+
   run! if app_file == $0
 end

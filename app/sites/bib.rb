@@ -12,6 +12,15 @@ class BiB
     response.scan(ROW_REGEX).map{|row| Item.from_row(row)}
   end
 
+  def self.file(file_id)
+    response = get($redis.hget(:bib, :file_path) % file_id,
+      headers: {'Cookie' => $redis.hget(:bib, :cookie)}
+    )
+    raise "Session Expired" if response.match('loginform')
+    raise "Unsuccessful Request" unless response.success?
+    response.body
+  end
+
   class Item < OpenStruct
     COL_REGEX = /<td.*?>.*?<\/td>/m
     CONTENT = />(.*?)</m
