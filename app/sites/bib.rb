@@ -2,10 +2,10 @@ class BiB
   include HTTParty
   base_uri $redis.hget(:bib, :base_uri)
 
-  ROW_REGEX = /#{$redis.hget :bib, :row_regex}/m
+  ROW_REGEX = /<tr id="#{$format}-\d+".*?<\/tr>/m
 
   def self.items
-    response = get($redis.hget(:bib, :browse_path),
+    response = get("/#{$format}s",
       headers: {'Cookie' => $redis.hget(:bib, :cookie)}
     )
     raise "Session Expired" if response.match('loginform')
@@ -13,7 +13,7 @@ class BiB
   end
 
   def self.file(file_id)
-    response = get($redis.hget(:bib, :file_path) % file_id,
+    response = get("/#{$format}/#{file_id}/download",
       headers: {'Cookie' => $redis.hget(:bib, :cookie)}
     )
     raise "Session Expired" if response.match('loginform')

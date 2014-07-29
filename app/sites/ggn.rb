@@ -2,11 +2,11 @@ class GGn
   include HTTParty
   base_uri $redis.hget(:ggn, :base_uri)
 
-  ROW_REGEX = /#{$redis.hget :ggn, :row_regex}/m
-  ALT_ROW_REGEX = /#{$redis.hget :ggn, :alt_row_regex}/m
+  ROW_REGEX = /<tr class="#{$format}">.*?<\/tr>/m
+  ALT_ROW_REGEX = /<tr class="group_#{$format}[^"]*?">\s*<td colspan="3">.*?<\/tr>/m
 
   def self.items
-    response = get($redis.hget(:ggn, :browse_path), verify: false,
+    response = get("/#{$format}.php", verify: false,
       headers: {'cookie' => $redis.hget(:ggn, :cookie)}
     )
     (response.scan(ROW_REGEX).map{|row| Item.from_row(row)} +

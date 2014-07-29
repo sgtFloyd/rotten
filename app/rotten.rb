@@ -3,6 +3,7 @@ Bundler.require
 
 load '.env' if File.exists?('.env')
 redistogo = URI.parse ENV['REDISTOGO_URL']
+$format = ENV['FORMAT']
 $redis = Redis.new(:host => redistogo.host,
                    :port => redistogo.port,
                    :password => redistogo.password)
@@ -24,7 +25,7 @@ class RottenApp < Sinatra::Base
   get('/bib.rss'){ rss BiB.items }
 
   get '/files/bib/:id' do
-    attachment "#{params[:id]}.#{ENV['FORMAT']}"
+    attachment "#{params[:id]}.#{$format}"
     BiB.file(params[:id])
   end
 

@@ -2,10 +2,10 @@ class CBT
   include HTTParty
   base_uri $redis.hget(:cbt, :base_uri)
 
-  ROW_REGEX = /#{$redis.hget :cbt, :row_regex}/m
+  ROW_REGEX = /<tr class="(?:even|odd)">.*?<\/tr>/m
 
   def self.items
-    response = get($redis.hget(:cbt, :browse_path),
+    response = get('/browse.php',
       headers: {'Cookie' => $redis.hget(:cbt, :cookie)}
     )
     raise "Session Expired" if response.match('takelogin.php')
