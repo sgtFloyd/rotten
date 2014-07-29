@@ -29,7 +29,7 @@ class BiB
       cols = row.scan(COL_REGEX)
       self.new(
         title: cols[1].scan(/<a.*?>.*?<\/a>/m)[0..1].join(' - ').scan(CONTENT).join,
-        link:  cols[2].scan(/<a.*?href="([^"]*?)".*?>/m).join, #TODO: This link requires a cookie
+        link:  [ENV['BASE_URI'],'/files/bib/',row.scan(/id="#{$format}-(\d+)"/),'?auth=',ENV['AUTH_KEY']].join,
         size:  cols[4].scan(/[^,]*?,(.*?)<br/m).join.strip,
         total: cols[6].scan(CONTENT).join.strip.to_i,
         up:    cols[7].scan(CONTENT).join.strip.to_i,
