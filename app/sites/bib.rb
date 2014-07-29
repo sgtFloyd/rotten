@@ -13,7 +13,7 @@ class BiB
   end
 
   def self.file(file_id)
-    response = get("/#{$format}/#{file_id}/download",
+    response = get("/#{$format}s/#{file_id}/download",
       headers: {'Cookie' => $redis.hget(:bib, :cookie)}
     )
     raise "Session Expired" if response.match('loginform')
