@@ -3,12 +3,13 @@ Bundler.require
 
 load '.env' if File.exists?('.env')
 redistogo = URI.parse ENV['REDISTOGO_URL']
-$format = ENV['FORMAT']
 $redis = Redis.new(:host => redistogo.host,
                    :port => redistogo.port,
                    :password => redistogo.password)
+$format = ENV['FORMAT']
 
 Dir['./app/sites/*.rb'].each &method(:require)
+load '.filters.rb' if File.exists?('.filters.rb')
 
 class RottenApp < Sinatra::Base
   before do
