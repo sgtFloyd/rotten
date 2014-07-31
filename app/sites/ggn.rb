@@ -34,7 +34,7 @@ class GGn
       self.new(
         title: CGI.unescape_html(cols[0].scan(CONTENT).join.gsub(/\s+/, ' ').strip),
         link:  CGI.unescape_html([GGn.base_uri,'/',cols[0].scan(/<a.*?href="([^"]*?)".*?>/m)[0]].join),
-        size:  cols[4].scan(CONTENT).join,
+        size:  cols[4].scan(CONTENT).join.to_bytes,
         total: cols[5].scan(CONTENT).join.to_i,
         up:    cols[6].scan(CONTENT).join.to_i,
         down:  cols[7].scan(CONTENT).join.to_i,

@@ -21,7 +21,7 @@ class CBT
       self.new(
         title: cols[1][0].scan(CONTENT).join.gsub('&nbsp;', ' ').strip,
         link:  [CBT.base_uri,'/',cols[3][0].scan(/<a href='(.*?)'/m)[1]].join,
-        size:  cols[6][0].scan(CONTENT).join,
+        size:  cols[6][0].scan(CONTENT).join.to_bytes,
         total: cols[7][0].scan(CONTENT).join.to_i,
         up:    cols[8][0].scan(CONTENT).join.to_i,
         down:  cols[9][0].scan(CONTENT).join.to_i,

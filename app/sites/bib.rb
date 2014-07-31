@@ -30,7 +30,7 @@ class BiB
       self.new(
         title: cols[1].scan(/<a.*?>.*?<\/a>/m)[0..1].join(' - ').scan(CONTENT).join,
         link:  [ENV['BASE_URI'],'/files/bib/',row.scan(/id="#{$format}-(\d+)"/),'?auth=',ENV['AUTH_KEY']].join,
-        size:  cols[4].scan(/[^,]*?,(.*?)<br/m).join.strip,
+        size:  cols[4].scan(/[^,]*?,(.*?)<br/m).join.strip.to_bytes,
         total: cols[6].scan(CONTENT).join.strip.to_i,
         up:    cols[7].scan(CONTENT).join.strip.to_i,
         down:  cols[8].scan(CONTENT).join.strip.to_i,
