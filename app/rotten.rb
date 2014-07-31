@@ -8,6 +8,7 @@ $redis = Redis.new(:host => redistogo.host,
                    :password => redistogo.password)
 $format = ENV['FORMAT']
 
+require './app/core_ext.rb'
 Dir['./app/sites/*.rb'].each &method(:require)
 load '.filters.rb' if File.exists?('.filters.rb')
 
