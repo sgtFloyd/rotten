@@ -26,6 +26,7 @@ class RottenApp < Sinatra::Base
   get('/cbt.rss'){ rss CBT.items }
   get('/ggn.rss'){ rss GGn.items }
   get('/bib.rss'){ rss BiB.items }
+  get('/wcd.rss'){ rss WCD.items }
 
   get '/files/bib/:id' do
     attachment "#{params[:id]}.#{$format}"
